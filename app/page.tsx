@@ -1,7 +1,12 @@
+"use client";
+
+import Link from "next/link";
+import { Suspense } from "react";
 import { Cta } from "@/components/cta/Cta";
 import { Header } from "@/components/header/Header";
 import { Footer } from "@/components/footer/Footer";
 import { Features } from "@/components/features/Features";
+import { CostCalculator } from "@/components/calculator/Calculator";
 
 export default function Home() {
   return (
@@ -24,42 +29,34 @@ export default function Home() {
           </p>
 
           <div className="flex items-center justify-center gap-4 mt-10">
-            <a
-              href="#calculator"
-              className="bg-black hover:bg-slate-800 text-white px-6 py-3 rounded-md font-medium transition-colors"
-            >
-              Calculate Savings
-            </a>
-            <a
-              href="#"
+            <Link
+              href="https://brightlabs.build/"
               className="border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-md font-medium transition-colors"
             >
               Learn More
-            </a>
+            </Link>
           </div>
         </div>
 
         <div className="text-center mb-16">
           <div className="text-sm text-gray-500 mb-6">Trusted By</div>
           <div className="flex flex-wrap justify-center items-center gap-8 grayscale opacity-70">
-            {/* <img src="/placeholder.svg?height=30&width=120" alt="TechVentures" className="h-8" />
-            <img src="/placeholder.svg?height=30&width=120" alt="StartupBoost" className="h-8" />
-            <img src="/placeholder.svg?height=30&width=120" alt="InnovateNow" className="h-8" />
-            <img src="/placeholder.svg?height=30&width=120" alt="FutureFounders" className="h-8" /> */}
+            {/* TODO: Add logos */}
           </div>
         </div>
 
+        <Suspense
+          fallback={
+            <div className="h-[600px] w-full bg-gray-100 animate-pulse rounded-lg"></div>
+          }
+        >
+          <CostCalculator />
+        </Suspense>
         <Features />
         <Cta />
-        {/* <div id="calculator" className="max-w-5xl mx-auto">
-          <Suspense fallback={<div className="h-[600px] w-full bg-gray-100 animate-pulse rounded-lg"></div>}>
-            <CostCalculator />
-          </Suspense>
-        </div> */}
       </div>
 
       <Footer />
-      {/*<Toaster /> */}
     </main>
   );
 }

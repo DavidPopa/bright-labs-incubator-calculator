@@ -2,7 +2,7 @@ import { BuildingIcon, UserIcon, RocketIcon } from "lucide-react";
 
 export const Features = () => {
   return (
-    <div className="mt-16">
+    <div className="max-w-7xl mx-auto mt-16">
       <div className="text-center mb-12">
         <h2 className="text-3xl font-bold mb-4">What We Offer</h2>
         <p className="text-gray-600 max-w-2xl mx-auto">

@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 export const Cta = () => {
   return (
-    <div className="mt-16 bg-black text-white p-8 rounded-xl shadow-sm text-center">
+    <div className="mt-16 bg-black text-white p-8 rounded-xl shadow-sm text-center max-w-7xl mx-auto mb-16">
     <h3 className="text-2xl font-bold mb-2">
       Ready to Reduce Your Startup Costs?
     </h3>
