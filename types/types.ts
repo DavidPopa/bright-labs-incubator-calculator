@@ -56,5 +56,5 @@ export type City = {
   
   export type MapComponentProps = {
     selectedCity: City | null;
-    setSelectedCity: React.Dispatch<React.SetStateAction<City | null>>;
+    setSelectedCity?: React.Dispatch<React.SetStateAction<City | null>>;
   };

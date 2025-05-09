@@ -550,7 +550,7 @@ export const startupTypes = [
   {
     id: "ai",
     name: "AI/ML",
-    description: "Artificial Intelligence and Machine Learning",
+    description: "Artificial Intelligence and ML",
     icon: <BrainIcon className="h-5 w-5" />,
   },
   {

@@ -1,7 +1,3 @@
-import "leaflet/dist/leaflet.css";
-import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
-import "leaflet-defaulticon-compatibility";
-
 import {
   EuroIcon,
   InfoIcon,
@@ -20,6 +16,8 @@ import {
   founderPersonas,
   brightLabsBenefits,
 } from "@/helpers/data";
+import Link from "next/link";
+import { Icon } from "leaflet";
 import {
   Select,
   SelectItem,
@@ -27,43 +25,43 @@ import {
   SelectContent,
   SelectTrigger,
 } from "@/components/ui/select";
-import "leaflet/dist/leaflet.css";
 import dynamic from "next/dynamic";
+import { useMap } from "react-leaflet";
+import { IconOptions } from "leaflet";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { Popup, Marker, useMap, TileLayer } from "react-leaflet";
 import { City, FounderPersona, MapComponentProps } from "@/types/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import Link from "next/link";
 
 const DynamicMapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        style={{
-          height: "500px",
-          background: "#f0f0f0",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        Loading Map...
-      </div>
-    ),
-  }
+  { ssr: false }
 );
 
-const MapComponent = ({ selectedCity, setSelectedCity }: MapComponentProps) => {
+const DynamicTileLayer = dynamic(
+  () => import("react-leaflet").then((mod) => mod.TileLayer),
+  { ssr: false }
+);
+
+const DynamicMarker = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Marker),
+  { ssr: false }
+);
+
+const DynamicPopup = dynamic(
+  () => import("react-leaflet").then((mod) => mod.Popup),
+  { ssr: false }
+);
+
+const MapComponent = ({ selectedCity }: MapComponentProps) => {
   const map = useMap();
-  console.log(setSelectedCity);
   useEffect(() => {
+    if (!map) return;
+
     if (selectedCity) {
       map.setView(selectedCity.position, 6);
     } else {
@@ -92,10 +90,16 @@ export const CostCalculator = () => {
     null
   );
 
-  const [leafletCustomIcon, setLeafletCustomIcon] = useState<any>(null);
+  const [leafletLoaded, setLeafletLoaded] = useState(false);
+  const [leafletCustomIcon, setLeafletCustomIcon] =
+    useState<Icon<IconOptions> | null>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    setLeafletLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && leafletLoaded) {
       import("leaflet")
         .then((L) => {
           setLeafletCustomIcon(
@@ -117,7 +121,7 @@ export const CostCalculator = () => {
           console.error("Error loading Leaflet or creating icon:", error);
         });
     }
-  }, []);
+  }, [leafletLoaded]);
 
   const findCityById = (id: string): City | undefined => {
     return cities.find((city) => city.id === id);
@@ -132,10 +136,6 @@ export const CostCalculator = () => {
 
   const handleMapCitySelect = (city: City) => {
     setSelectedCity(city);
-    // Optionally, also update the dropdown if you have one that reflects the map selection
-    // And switch tab to calculator to see details if desired:
-    // setActiveTab("calculator");
-    console.log(`Selected city from map: ${city.name}, ${city.country}`);
   };
 
   const adjustCostsForProfileAndType = (baseCost: number): number => {
@@ -276,7 +276,9 @@ export const CostCalculator = () => {
   };
 
   const handleCityProfileSelect = (profileId: string) => {
-    setSelectedCityProfile(profileId);
+    setSelectedCityProfile((prevProfileId) =>
+      prevProfileId === profileId ? null : profileId
+    );
   };
 
   const getCityMonthlyCosts = (cityId: string | null): number => {
@@ -288,8 +290,6 @@ export const CostCalculator = () => {
 
   return (
     <div className="space-y-16 max-w-7xl mx-auto p-4 md:p-8">
-      {" "}
-      {/* Added padding */}
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold mb-4">Startup Cost Calculator</h2>
         <p className="text-gray-600 max-w-2xl mx-auto">
@@ -407,7 +407,7 @@ export const CostCalculator = () => {
                         {cityProfiles.map((profile) => (
                           <div
                             key={profile.id}
-                            className={`border rounded-lg p-3 cursor-pointer transition-all hover:shadow-sm ${
+                            className={`border rounded-lg p-2 cursor-pointer transition-all hover:shadow-sm duration-500 ease-in-ou ${
                               selectedCityProfile === profile.id
                                 ? "border-black bg-white dark:bg-black dark:border-white"
                                 : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -810,7 +810,7 @@ export const CostCalculator = () => {
                                 )}
                               </p>
                               <p className="text-black dark:text-white mt-1">
-                                That's a{" "}
+                                That is a{" "}
                                 {calculateSavingsPercentage(selectedCity)}%
                                 reduction in costs!
                               </p>
@@ -843,7 +843,9 @@ export const CostCalculator = () => {
                               {selectedCity.name}.
                             </p>
                             <Button className="bg-black hover:bg-white text-white hover:text-black">
-                              <Link href="https://airtable.com/appx6Ioi7YDebB7mW/pagvQAXuSeUplrKYl/form">Apply to Bright Labs</Link>
+                              <Link href="https://airtable.com/appx6Ioi7YDebB7mW/pagvQAXuSeUplrKYl/form">
+                                Apply to Bright Labs
+                              </Link>
                             </Button>
                           </div>
                         </div>
@@ -887,12 +889,12 @@ export const CostCalculator = () => {
                     ]} // Restrict to Europe
                     minZoom={3}
                   >
-                    <TileLayer
+                    <DynamicTileLayer
                       url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
                       attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>'
                     />
                     {cities.map((city) => (
-                      <Marker
+                      <DynamicMarker
                         key={city.id}
                         position={city.position as [number, number]}
                         icon={leafletCustomIcon}
@@ -900,7 +902,7 @@ export const CostCalculator = () => {
                           click: () => handleMapCitySelect(city),
                         }}
                       >
-                        <Popup>
+                        <DynamicPopup>
                           <div className="p-1 space-y-1">
                             {" "}
                             {/* Reduced padding for compact popup */}
@@ -936,8 +938,8 @@ export const CostCalculator = () => {
                               </div>
                             </div>
                           </div>
-                        </Popup>
-                      </Marker>
+                        </DynamicPopup>
+                      </DynamicMarker>
                     ))}
                     <MapComponent
                       selectedCity={selectedCity}
