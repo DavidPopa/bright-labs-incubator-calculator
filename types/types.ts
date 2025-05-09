@@ -9,7 +9,7 @@ export type City = {
       utilities: number;
       coworking: number;
       transport: number;
-      other: number;
+      medical: number;
     };
     startupFriendliness: number;
   };

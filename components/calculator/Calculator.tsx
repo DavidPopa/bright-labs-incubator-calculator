@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import {
   cities,
+  majorHub,
+  hiddenGem,
+  emergingHub,
   startupTypes,
   cityProfiles,
   founderPersonas,
@@ -18,6 +21,7 @@ import {
 } from "@/helpers/data";
 import Link from "next/link";
 import { Icon } from "leaflet";
+import Image from "next/image";
 import {
   Select,
   SelectItem,
@@ -29,12 +33,13 @@ import dynamic from "next/dynamic";
 import { useMap } from "react-leaflet";
 import { IconOptions } from "leaflet";
 import { useState, useEffect } from "react";
+import star from "../../assets/star_2b50.png";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { City, FounderPersona, MapComponentProps } from "@/types/types";
+import { City, MapComponentProps } from "@/types/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const DynamicMapContainer = dynamic(
@@ -73,21 +78,33 @@ const MapComponent = ({ selectedCity }: MapComponentProps) => {
 };
 
 export const CostCalculator = () => {
-  const [teamSize, setTeamSize] = useState<number>(2);
-  const [burnRate, setBurnRate] = useState<number>(2500);
-  const [timeframe, setTimeframe] = useState<number>(12);
-  const [additionalExpenses, setAdditionalExpenses] = useState<number>(1000);
+  const [teamSize, setTeamSize] = useState<number>(
+    founderPersonas[0].defaults.teamSize
+  );
+  const [burnRate, setBurnRate] = useState<number>(
+    founderPersonas[0].defaults.burnRate
+  );
+  const [timeframe, setTimeframe] = useState<number>(
+    founderPersonas[0].defaults.timeframe
+  );
+  const [additionalExpenses, setAdditionalExpenses] = useState<number>(
+    founderPersonas[0].defaults.additionalExpenses
+  );
 
   const [activeTab, setActiveTab] = useState<string>("calculator");
-  const [isRemoteTeam, setIsRemoteTeam] = useState<boolean>(false);
+  const [isRemoteTeam, setIsRemoteTeam] = useState<boolean>(
+    founderPersonas[0].defaults.isRemoteTeam
+  );
 
-  const [selectedCity, setSelectedCity] = useState<City | null>(null);
-  const [selectedPersona, setSelectedPersona] = useState<string | null>(null);
+  const [selectedCity, setSelectedCity] = useState<City | null>(cities[0]);
+  const [selectedPersona, setSelectedPersona] = useState<string | null>(
+    founderPersonas[0].id
+  );
   const [selectedStartupType, setSelectedStartupType] = useState<string | null>(
-    null
+    startupTypes[0].id
   );
   const [selectedCityProfile, setSelectedCityProfile] = useState<string | null>(
-    null
+    cityProfiles[0].id
   );
 
   const [leafletLoaded, setLeafletLoaded] = useState(false);
@@ -182,10 +199,11 @@ export const CostCalculator = () => {
 
   const calculateMonthlyCosts = (city: City | null): number => {
     if (!city) return 0;
-    const { rent, food, utilities, coworking, transport, other } =
+    const { rent, food, utilities, coworking, transport, medical } =
       city.monthlyCosts;
-    let baseCost = rent + food + utilities + coworking + transport + other;
+    let baseCost = rent + food + utilities + coworking + transport + medical;
 
+    // Living Costs
     if (isRemoteTeam) {
       baseCost =
         rent * 0.7 +
@@ -193,7 +211,7 @@ export const CostCalculator = () => {
         utilities +
         coworking * 0.5 +
         transport * 0.5 +
-        other;
+        medical;
     }
     return adjustCostsForProfileAndType(baseCost);
   };
@@ -211,8 +229,8 @@ export const CostCalculator = () => {
 
   const calculateBrightLabsMonthlyCost = (city: City | null): number => {
     if (!city) return 0;
-    const { utilities, transport, other } = city.monthlyCosts;
-    const remainingLivingCostsPerPerson = utilities + transport + other;
+    const { utilities, transport, medical } = city.monthlyCosts;
+    const remainingLivingCostsPerPerson = utilities + transport + medical;
     const monthlyCost =
       burnRate +
       remainingLivingCostsPerPerson * teamSize +
@@ -240,35 +258,11 @@ export const CostCalculator = () => {
     return Math.round((savings / timeframeCost) * 100);
   };
 
-  const calculateRunwayExtension = (city: City | null): string | number => {
-    if (!city) return 0;
-    const monthlyCost = calculateTotalMonthlyCost(city);
-    const brightLabsMonthlyCost = calculateBrightLabsMonthlyCost(city);
-
-    if (brightLabsMonthlyCost <= 0) return "∞";
-    if (monthlyCost === 0 && brightLabsMonthlyCost > 0) return 0;
-    if (monthlyCost <= brightLabsMonthlyCost) return 0;
-
-    const extension = Math.round(
-      (monthlyCost / brightLabsMonthlyCost - 1) * timeframe
-    );
-    return extension > 0 ? extension : 0;
-  };
-
   const formatCurrency = (amount: number): string => {
     return new Intl.NumberFormat("en-EU", {
       style: "currency",
       currency: "EUR",
     }).format(amount);
-  };
-
-  const applyPersona = (persona: FounderPersona) => {
-    setSelectedPersona(persona.id);
-    setTeamSize(persona.defaults.teamSize);
-    setBurnRate(persona.defaults.burnRate);
-    setAdditionalExpenses(persona.defaults.additionalExpenses);
-    setIsRemoteTeam(persona.defaults.isRemoteTeam);
-    setTimeframe(persona.defaults.timeframe);
   };
 
   const handleStartupTypeSelect = (typeId: string) => {
@@ -286,6 +280,20 @@ export const CostCalculator = () => {
     if (!city) return 0;
     const { rent, food, coworking } = city.monthlyCosts;
     return rent + food + coworking;
+  };
+
+  const getFilteredCities = (): City[] => {
+    console.log(selectedCityProfile);
+    switch (selectedCityProfile) {
+      case "major":
+        return majorHub;
+      case "emerging":
+        return emergingHub;
+      case "hidden-gem":
+        return hiddenGem;
+      default:
+        return cities;
+    }
   };
 
   return (
@@ -328,7 +336,7 @@ export const CostCalculator = () => {
                             ? "border-black bg-white dark:bg-black dark:border-white"
                             : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
                         }`}
-                        onClick={() => applyPersona(persona)}
+                        onClick={() => setSelectedPersona(persona.id)}
                       >
                         <div className="flex items-center gap-3 mb-2">
                           <div
@@ -362,7 +370,7 @@ export const CostCalculator = () => {
                         <RocketIcon className="h-5 w-5 text-gray-700 dark:text-gray-300" />
                         Choose Your Startup Type
                       </h4>
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {startupTypes.map((type) => (
                           <div
                             key={type.id}
@@ -373,7 +381,7 @@ export const CostCalculator = () => {
                             }`}
                             onClick={() => handleStartupTypeSelect(type.id)}
                           >
-                            <div className="flex items-center gap-2">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                               <div
                                 className={`p-1.5 rounded-full ${
                                   selectedStartupType === type.id
@@ -498,8 +506,23 @@ export const CostCalculator = () => {
                           <SelectValue placeholder="Choose a city" />
                         </SelectTrigger>
                         <SelectContent>
-                          {cities.map((city) => (
+                          {selectedCityProfile === "major" ||
+                          selectedCityProfile === "emerging" ? (
+                            <SelectItem key={cities[0].id} value={cities[0].id}>
+                              <span className="text-[#7c7405] font-bold">
+                                Oradea
+                              </span>
+                            </SelectItem>
+                          ) : null}
+                          {getFilteredCities().map((city) => (
                             <SelectItem key={city.id} value={city.id}>
+                              {city.id === "oradea" && (
+                                <Image
+                                  src={star}
+                                  alt="Star"
+                                  className="ml-2 h-4 w-4"
+                                />
+                              )}
                               {city.name}, {city.country}
                             </SelectItem>
                           ))}
@@ -700,12 +723,64 @@ export const CostCalculator = () => {
                               </div>
                               <div className="flex justify-between">
                                 <span className="text-gray-500 dark:text-gray-400">
-                                  Living Costs ({teamSize}x)
+                                  Rent ({teamSize}x)
                                 </span>
                                 <span>
                                   {formatCurrency(
-                                    calculateMonthlyCosts(selectedCity) *
+                                    selectedCity.monthlyCosts.rent * teamSize
+                                  )}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-500 dark:text-gray-400">
+                                  Food ({teamSize}x)
+                                </span>
+                                <span>
+                                  {formatCurrency(
+                                    selectedCity.monthlyCosts.food * teamSize
+                                  )}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-500 dark:text-gray-400">
+                                  Utilities ({teamSize}x)
+                                </span>
+                                <span>
+                                  {formatCurrency(
+                                    selectedCity.monthlyCosts.utilities *
                                       teamSize
+                                  )}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-500 dark:text-gray-400">
+                                  Coworking ({teamSize}x)
+                                </span>
+                                <span>
+                                  {formatCurrency(
+                                    selectedCity.monthlyCosts.coworking *
+                                      teamSize
+                                  )}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-500 dark:text-gray-400">
+                                  Transport ({teamSize}x)
+                                </span>
+                                <span>
+                                  {formatCurrency(
+                                    selectedCity.monthlyCosts.transport *
+                                      teamSize
+                                  )}
+                                </span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-gray-500 dark:text-gray-400">
+                                  Medical ({teamSize}x)
+                                </span>
+                                <span>
+                                  {formatCurrency(
+                                    selectedCity.monthlyCosts.medical * teamSize
                                   )}
                                 </span>
                               </div>
@@ -727,9 +802,10 @@ export const CostCalculator = () => {
                               </div>
                             </div>
                           </div>
+
                           <div className="bg-black text-white rounded-lg p-4">
                             <h4 className="font-medium text-white mb-2">
-                              With Bright Labs
+                              Build in Oradea with Bright Labs
                             </h4>
                             <p className="text-2xl font-bold">
                               {formatCurrency(
@@ -764,7 +840,7 @@ export const CostCalculator = () => {
                                   {formatCurrency(
                                     (selectedCity.monthlyCosts.utilities +
                                       selectedCity.monthlyCosts.transport +
-                                      selectedCity.monthlyCosts.other) *
+                                      selectedCity.monthlyCosts.medical) *
                                       teamSize
                                   )}
                                 </span>
@@ -799,7 +875,7 @@ export const CostCalculator = () => {
                         </div>
 
                         <div className="bg-white dark:bg-black border border-black rounded-lg p-6">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="grid grid-cols-1 gap-6">
                             <div className="text-center">
                               <h3 className="text-xl font-bold text-black dark:text-white mb-2">
                                 Your Total Savings
@@ -813,23 +889,6 @@ export const CostCalculator = () => {
                                 That is a{" "}
                                 {calculateSavingsPercentage(selectedCity)}%
                                 reduction in costs!
-                              </p>
-                            </div>
-                            <div className="text-center">
-                              <h3 className="text-xl font-bold text-black dark:text-white mb-2">
-                                Runway Extension
-                              </h3>
-                              <p className="text-3xl font-bold text-black dark:text-white">
-                                +{calculateRunwayExtension(selectedCity)} months
-                              </p>
-                              <p className="text-black dark:text-white mt-1">
-                                Stretch your funding{" "}
-                                {calculateRunwayExtension(selectedCity) === "∞"
-                                  ? "indefinitely"
-                                  : `by ${calculateRunwayExtension(
-                                      selectedCity
-                                    )} months`}
-                                !
                               </p>
                             </div>
                           </div>

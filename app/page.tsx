@@ -38,16 +38,9 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="text-center mb-16">
-          <div className="text-sm text-gray-500 mb-6">Trusted By</div>
-          <div className="flex flex-wrap justify-center items-center gap-8 grayscale opacity-70">
-            {/* TODO: Add logos */}
-          </div>
-        </div>
-
         <Suspense
           fallback={
-            <div className="h-[600px] w-full bg-gray-100 animate-pulse rounded-lg"></div>
+            <div className="h-[600px] w-full animate-pulse rounded-lg"></div>
           }
         >
           <CostCalculator />

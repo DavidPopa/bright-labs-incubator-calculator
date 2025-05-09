@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
-import { MenuIcon, XIcon } from "lucide-react";
+import logo from "../../assets/logo.png";
+import gif from "../../assets/fire_1f525.gif"
 import { Button } from "@/components/ui/button";
 
 export const Header = () => {
@@ -14,29 +16,26 @@ export const Header = () => {
         <div className="flex items-center">
           <Link
             href="https://brightlabs.build/"
-            className="text-xl font-bold text-black flex items-center"
+            className="flex items-center gap-2"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-6 w-6 mr-2"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
-            Bright Labs
+            <Image
+              src={logo}
+              alt="Startup Cost Calculator"
+              width={24}
+              height={24}
+            />
+            <p className="text-[22px] font-bold text-black">
+              Startup Cost Calculator
+            </p>
           </Link>
         </div>
 
         <div className="hidden md:flex items-center space-x-4">
+          <p className="text-center text-sm text-gray-500 ">
+            Reduce with <span className="font-bold">Bright Labs</span>
+          </p>
           <Link href="https://airtable.com/appx6Ioi7YDebB7mW/pagvQAXuSeUplrKYl/form">
-            <Button className="bg-black cursor-pointer hover:bg-slate-800">
+            <Button className="w-full cursor-pointer py-4 bg-[#fff600] hover:bg-[#fff600] hover:text-black text-black text-center">
               Apply Now
             </Button>
           </Link>
@@ -50,14 +49,10 @@ export const Header = () => {
         {/* Mobile menu button */}
         <button
           type="button"
-          className="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700"
+          className="md:hidden cursor-pointer inline-flex items-center justify-center p-2 rounded-md text-gray-700"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
-          {mobileMenuOpen ? (
-            <XIcon className="h-6 w-6" aria-hidden="true" />
-          ) : (
-            <MenuIcon className="h-6 w-6" aria-hidden="true" />
-          )}
+          <Image unoptimized src={gif} alt="Bright Labs" width={24} height={24} />
         </button>
       </div>
 
@@ -70,11 +65,14 @@ export const Header = () => {
         }`}
       >
         <div className="container mx-auto px-4 space-y-2 flex flex-col">
+          <p className="text-center text-sm text-gray-500 ">
+            Reduce with <span className="font-bold">Bright Labs</span>
+          </p>
           <Link
             href="https://airtable.com/appx6Ioi7YDebB7mW/pagvQAXuSeUplrKYl/form"
             className="cursor-pointer"
           >
-            <Button className="w-full py-4 bg-black hover:bg-slate-800 text-center">
+            <Button className="w-full cursor-pointer py-4 bg-[#fff600] hover:bg-[#fff600] hover:text-black text-black text-center">
               Apply Now
             </Button>
           </Link>
