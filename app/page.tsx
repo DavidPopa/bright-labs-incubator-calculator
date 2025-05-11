@@ -28,13 +28,26 @@ export default function Home() {
             you could save with Bright Labs incubator program.
           </p>
 
-          <div className="flex items-center justify-center gap-4 mt-10">
-            <Link
-              href="https://brightlabs.build/"
-              className="border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-md font-medium transition-colors"
-            >
-              Learn More
-            </Link>
+          <div className="text-center mt-10">
+            <div className="font-bold mb-4">Best cities to build your startup in 2025</div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <div
+                className="transition-transform transform hover:scale-105 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-md font-medium"
+              >
+                🤩 Talinn - Major Hub
+              </div>
+              <Link
+                href="https://brightlabs.build/"
+                className="transition-transform transform hover:scale-105 bg-[#fff600] hover:bg-[#fff600] hover:text-black text-black border border-[#fff600] px-6 py-3 rounded-md font-medium"
+              >
+                💎 Oradea - Hidden Gem
+              </Link>
+              <div
+                className="transition-transform transform hover:scale-105 border border-gray-300 hover:border-gray-400 px-6 py-3 rounded-md font-medium"
+              >
+                🚀 Prague - Emerging Hub
+              </div>
+            </div>
           </div>
         </div>
 

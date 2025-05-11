@@ -12,7 +12,7 @@ export const Features = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm transition-transform transform hover:scale-105">
           <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center mb-4">
             <BuildingIcon className="h-6 w-6 text-white" />
           </div>
@@ -23,7 +23,7 @@ export const Features = () => {
           </p>
         </div>
 
-        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm transition-transform transform hover:scale-105">
           <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center mb-4">
             <UserIcon className="h-6 w-6 text-white" />
           </div>
@@ -34,7 +34,7 @@ export const Features = () => {
           </p>
         </div>
 
-        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm transition-transform transform hover:scale-105">
           <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center mb-4">
             <RocketIcon className="h-6 w-6 text-white" />
           </div>
