@@ -74,9 +74,7 @@ const CityPopupContent: React.FC<CityPopupContentProps> = ({
   const renderWithBrightLabs = () => {
     return (
       <div className="border rounded-lg p-3 border-[#fff600] bg-[#fff600]">
-        <div className="mb-2 text-black">
-        With Bright Labs
-        </div>
+        <div className="mb-2 text-black font-bold">With Bright Labs</div>
         <ul className="space-y-1.5 text-sm">
           <li className="flex items-center justify-between">
             <s className="flex items-center">
@@ -127,7 +125,7 @@ const CityPopupContent: React.FC<CityPopupContentProps> = ({
             </span>
             <span className="font-medium text-black">€2000</span>
           </li>
-          <li className="flex items-center justify-between font-bold">
+          <li className="flex items-center justify-between font-bold border-t-2 border-black mt-2 pt-2">
             <span className="flex items-center text-black">Total:</span>
             <span className="text-black">€2110</span>
           </li>
@@ -139,15 +137,10 @@ const CityPopupContent: React.FC<CityPopupContentProps> = ({
   const renderCostList = (
     title: string,
     costs: typeof costItems,
-    highlight: boolean,
     isBrightLabsSection: boolean = false
   ) => (
-    <div
-      className={`border rounded-lg p-3 ${
-        highlight ? "border-[#fff600] bg-[#fff600] " : "border-black bg-white"
-      }`}
-    >
-      <div className={`mb-2 ${highlight ? "text-black" : "text-black"}`}>
+    <div className="border rounded-lg p-3 border-black bg-white">
+      <div className="mb-2 text-black font-bold">
         {isBrightLabsSection}
         {title}
       </div>
@@ -171,7 +164,7 @@ const CityPopupContent: React.FC<CityPopupContentProps> = ({
             </span>
           </li>
         ))}
-        <li className="flex items-center justify-between font-bold">
+        <li className="flex items-center justify-between font-bold border-t-2 border-black mt-2 pt-2">
           <span className="flex items-center text-black">Total:</span>
           <span className="text-black">
             €{costs.reduce((total, item) => total + item.value, 0)}
