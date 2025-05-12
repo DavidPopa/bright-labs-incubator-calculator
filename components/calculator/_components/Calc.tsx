@@ -446,7 +446,7 @@ export const Calc = () => {
                   Monthly Burn Rate (€)
                   <div className="relative group">
                     <InfoIcon className="h-4 w-4 ml-1 inline-block text-gray-400" />
-                    <span className="w-48 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded-lg shadow-lg py-2 px-3">
+                    <span className="w-56 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block group-focus:block group-active:block bg-gray-800 text-white text-xs rounded-lg shadow-lg py-2 px-3">
                       <strong>Burn Rate:</strong> The burn rate is used by
                       startup companies and investors to track the amount of
                       monthly cash that a company spends before it starts
@@ -462,7 +462,7 @@ export const Calc = () => {
                   onChange={handleChange}
                 />
                 <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Calculation starts from 4000€/month
+                  Calculation starts from 2000€/month
                 </p>
               </div>
               <div className="space-y-2">
@@ -606,7 +606,7 @@ export const Calc = () => {
                         </h4>
                         <div className="relative group">
                           <InfoIcon className="h-4 w-4 ml-1 inline-block text-gray-400" />
-                          <span className="w-48 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded-lg shadow-lg py-2 px-3">
+                          <span className="w-56 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block group-focus:block group-active:block bg-gray-800 text-white text-xs rounded-lg shadow-lg py-2 px-3">
                             <strong>Info:</strong> The total cost may vary based
                             on the startup type that you choose.
                           </span>
@@ -637,7 +637,7 @@ export const Calc = () => {
                                 </p>
                                 <div className="relative group">
                                   <InfoIcon className="h-3 w-3 ml-1 inline-block text-gray-400" />
-                                  <span className="w-48 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded-lg shadow-lg py-2 px-3">
+                                  <span className="w-56 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block group-focus:block group-active:block bg-gray-800 text-white text-xs rounded-lg shadow-lg py-2 px-3">
                                     <strong>Info:</strong> The rent and
                                     utilities are calculated based on the number
                                     of people in the team. If you are a solo
@@ -740,7 +740,7 @@ export const Calc = () => {
                             <p>Stipend grant</p>
                             <div className="relative group">
                               <InfoIcon className="h-3 w-3 ml-1 inline-block text-gray-400" />
-                              <span className="w-48 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-sm rounded-lg shadow-lg py-2 px-3">
+                              <span className="w-56 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block group-focus:block group-active:block bg-gray-800 text-white text-xs rounded-lg shadow-lg py-2 px-3">
                                 <strong>Info:</strong> You will receive a
                                 stipend grant of 2000€/month and because monthly
                                 burn rate is for example 2000€/month, we will
