@@ -6,6 +6,7 @@ import {
   Train,
   MapPin,
   Utensils,
+  InfoIcon,
   Briefcase,
   Lightbulb,
   LoaderIcon,
@@ -105,9 +106,17 @@ const CityPopupContent = ({
           </span>
           <span className="font-medium text-black">€2000</span>
         </li>
-        <li className="flex items-center justify-between font-bold border-t-2 border-black mt-2 pt-2">
+        <li className="flex items-center justify-between font-bold border-t-2 border-black mt-2">
           <span className="flex items-center text-black">Total:</span>
-          <span className="text-black">€2110</span>
+          <div className="flex items-center gap-1">
+            <p className="text-black font-semibold">-€1890</p>
+            <div className="relative group">
+              <InfoIcon className="h-4 w-4 text-black cursor-pointer" />
+              <span className="w-56 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block bg-gray-800 text-white text-xs rounded-lg shadow-lg py-2 px-3">
+                <strong>Burn Rate:</strong> Enjoy savings on living, utilities, food, and coworking costs, plus a <strong>€2000</strong> grant to kickstart your prototype with Bright Labs.
+              </span>
+            </div>
+          </div>
         </li>
       </ul>
     </div>
@@ -199,9 +208,9 @@ export const Maps = () => {
       import("leaflet").then((L) => {
         const defaultIcon = new L.Icon({
           iconUrl:
-          "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png",
+            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png",
           iconRetinaUrl:
-          "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black-2x.png",
+            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black-2x.png",
           shadowUrl:
             "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
           iconSize: [25, 41],
@@ -294,14 +303,6 @@ export const Maps = () => {
               key={city.id}
               position={city.position}
               icon={city.id === "oradea" ? oradeaIcon : defaultIcon}
-              eventHandlers={{
-                mouseover: (e) => {
-                  e.target.openPopup();
-                },
-                mouseout: (e) => {
-                  e.target.closePopup();
-                },
-              }}
             >
               <Popup>
                 <CityPopupContent
