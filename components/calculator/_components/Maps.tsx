@@ -12,11 +12,13 @@ import {
   LoaderIcon,
   HeartPulse,
 } from "lucide-react";
-import "leaflet/dist/leaflet.css";
 import dynamic from "next/dynamic";
 import { City } from "@/types/types";
 import { useEffect, useState, useCallback } from "react";
 import { cities as initialCities } from "@/helpers/data";
+import shadowMarker from "../../../assets/marker-shadow.png";
+import blackMarker from "../../../assets/marker-icon-black.png";
+import yellowMarker from "../../../assets/marker-icon-yellow.png";
 import { Icon, IconOptions, LatLngBoundsExpression } from "leaflet";
 
 // Dynamic imports
@@ -207,12 +209,10 @@ export const Maps = () => {
     if (typeof window !== "undefined") {
       import("leaflet").then((L) => {
         const defaultIcon = new L.Icon({
-          iconUrl:
-            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png",
-          iconRetinaUrl:
-            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black-2x.png",
-          shadowUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+          iconUrl: blackMarker.src,
+          // iconRetinaUrl:
+          //   "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black-2x.png",
+          shadowUrl: shadowMarker.src,
           iconSize: [25, 41],
           iconAnchor: [12, 41],
           popupAnchor: [1, -34],
@@ -220,12 +220,10 @@ export const Maps = () => {
         });
 
         const oradeaIcon = new L.Icon({
-          iconUrl:
-            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png",
-          iconRetinaUrl:
-            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow-2x.png",
-          shadowUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+          iconUrl: yellowMarker.src,
+          // iconRetinaUrl:
+          //   "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow-2x.png",
+          shadowUrl: shadowMarker.src,
           iconSize: [25, 41],
           iconAnchor: [12, 41],
           popupAnchor: [1, -34],
