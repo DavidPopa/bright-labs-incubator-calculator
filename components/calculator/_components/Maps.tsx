@@ -2,6 +2,7 @@
 
 import {
   Home,
+  Gift,
   Train,
   MapPin,
   Utensils,
@@ -9,7 +10,6 @@ import {
   Lightbulb,
   LoaderIcon,
   HeartPulse,
-  Gift,
 } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 import dynamic from "next/dynamic";
@@ -18,6 +18,7 @@ import { useEffect, useState, useCallback } from "react";
 import { cities as initialCities } from "@/helpers/data";
 import { Icon, IconOptions, LatLngBoundsExpression } from "leaflet";
 
+// Dynamic imports
 const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), {
   ssr: false,
 });
@@ -34,16 +35,15 @@ const MapContainer = dynamic(
   { ssr: false }
 );
 
-interface CityPopupContentProps {
-  city: City;
-  calculatedCost: number;
-  isOradea: boolean;
-}
-
-const CityPopupContent: React.FC<CityPopupContentProps> = ({
+// Popup Content Component (unchanged)
+const CityPopupContent = ({
   city,
   calculatedCost,
   isOradea,
+}: {
+  city: City;
+  calculatedCost: number;
+  isOradea: boolean;
 }) => {
   const costItems = [
     {
@@ -71,68 +71,47 @@ const CityPopupContent: React.FC<CityPopupContentProps> = ({
     { Icon: HeartPulse, label: "Medical", value: city.monthlyCosts.medical },
   ];
 
-  const renderWithBrightLabs = () => {
-    return (
-      <div className="border rounded-lg p-3 border-[#fff600] bg-[#fff600]">
-        <div className="mb-2 text-black font-bold">With Bright Labs</div>
-        <ul className="space-y-1.5 text-sm">
-          <li className="flex items-center justify-between">
+  const renderWithBrightLabs = () => (
+    <div className="border rounded-lg p-3 border-[#fff600] bg-[#fff600]">
+      <div className="mb-2 text-black font-bold">With Bright Labs</div>
+      <ul className="space-y-1.5 text-sm">
+        {[Home, Lightbulb, Utensils, Briefcase].map((IconComp, idx) => (
+          <li key={idx} className="flex items-center justify-between">
             <s className="flex items-center">
-              <Home className="w-4 h-4 mr-2 text-black" />
-              Rent:
+              <IconComp className="w-4 h-4 mr-2 text-black" />
+              {costItems[idx].label}:
             </s>
             <span className="font-medium text-black">€0.00</span>
           </li>
-          <li className="flex items-center justify-between">
-            <s className="flex items-center">
-              <Lightbulb className="w-4 h-4 mr-2 text-black" />
-              Utilities:
-            </s>
-            <span className="font-medium text-black">€0.00</span>
-          </li>
-          <li className="flex items-center justify-between">
-            <s className="flex items-center">
-              <Utensils className="w-4 h-4 mr-2 text-black" />
-              Food:
-            </s>
-            <span className="font-medium text-black">€0.00</span>
-          </li>
-          <li className="flex items-center justify-between">
-            <s className="flex items-center">
-              <Briefcase className="w-4 h-4 mr-2 text-black" />
-              Coworking:
-            </s>
-            <span className="font-medium text-black">€0.00</span>
-          </li>
-          <li className="flex items-center justify-between">
-            <span className="flex items-center">
-              <Train className="w-4 h-4 mr-2 text-black" />
-              Transport:
-            </span>
-            <span className="font-medium text-black">€30</span>
-          </li>
-          <li className="flex items-center justify-between">
-            <span className="flex items-center">
-              <HeartPulse className="w-4 h-4 mr-2 text-black" />
-              Medical:
-            </span>
-            <span className="font-medium text-black">€80</span>
-          </li>
-          <li className="flex items-center justify-between">
-            <span className="flex items-center">
-              <Gift className="w-4 h-4 mr-2 text-black" />
-              Stipend grant:
-            </span>
-            <span className="font-medium text-black">€2000</span>
-          </li>
-          <li className="flex items-center justify-between font-bold border-t-2 border-black mt-2 pt-2">
-            <span className="flex items-center text-black">Total:</span>
-            <span className="text-black">€2110</span>
-          </li>
-        </ul>
-      </div>
-    );
-  };
+        ))}
+        <li className="flex items-center justify-between">
+          <span className="flex items-center">
+            <Train className="w-4 h-4 mr-2 text-black" />
+            Transport:
+          </span>
+          <span className="font-medium text-black">€30</span>
+        </li>
+        <li className="flex items-center justify-between">
+          <span className="flex items-center">
+            <HeartPulse className="w-4 h-4 mr-2 text-black" />
+            Medical:
+          </span>
+          <span className="font-medium text-black">€80</span>
+        </li>
+        <li className="flex items-center justify-between">
+          <span className="flex items-center">
+            <Gift className="w-4 h-4 mr-2 text-black" />
+            Stipend grant:
+          </span>
+          <span className="font-medium text-black">€2000</span>
+        </li>
+        <li className="flex items-center justify-between font-bold border-t-2 border-black mt-2 pt-2">
+          <span className="flex items-center text-black">Total:</span>
+          <span className="text-black">€2110</span>
+        </li>
+      </ul>
+    </div>
+  );
 
   const renderCostList = (
     title: string,
@@ -140,10 +119,7 @@ const CityPopupContent: React.FC<CityPopupContentProps> = ({
     isBrightLabsSection: boolean = false
   ) => (
     <div className="border rounded-lg p-3 border-black bg-white">
-      <div className="mb-2 text-black font-bold">
-        {isBrightLabsSection}
-        {title}
-      </div>
+      <div className="mb-2 text-black font-bold">{title}</div>
       <ul className="space-y-1.5 text-sm">
         {costs.map((item) => (
           <li key={item.label} className="flex items-center justify-between">
@@ -195,33 +171,37 @@ const CityPopupContent: React.FC<CityPopupContentProps> = ({
       {isOradea ? (
         <div className="space-y-3">
           {renderWithBrightLabs()}
-          {renderCostList("Without Bright Labs (Standard)", costItems, false)}
+          {renderCostList("Without Bright Labs (Standard)", costItems)}
         </div>
       ) : (
-        renderCostList("Cost Breakdown", costItems, false)
+        renderCostList("Cost Breakdown", costItems)
       )}
     </div>
   );
 };
 
+// Main Map Component
 export const Maps = () => {
   const teamSize = 1;
   const isRemoteTeam = false;
   const additionalExpenses = 0;
 
   const [isClient, setIsClient] = useState(false);
-  const [customIcon, setCustomIcon] = useState<Icon<IconOptions> | null>(null);
+  const [defaultIcon, setDefaultIcon] = useState<Icon<IconOptions> | null>(
+    null
+  );
+  const [oradeaIcon, setOradeaIcon] = useState<Icon<IconOptions> | null>(null);
 
   useEffect(() => {
     setIsClient(typeof window !== "undefined");
 
     if (typeof window !== "undefined") {
       import("leaflet").then((L) => {
-        const icon = new L.Icon({
+        const defaultIcon = new L.Icon({
           iconUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+          "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png",
           iconRetinaUrl:
-            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+          "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black-2x.png",
           shadowUrl:
             "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
           iconSize: [25, 41],
@@ -229,7 +209,22 @@ export const Maps = () => {
           popupAnchor: [1, -34],
           shadowSize: [41, 41],
         });
-        setCustomIcon(icon);
+
+        const oradeaIcon = new L.Icon({
+          iconUrl:
+            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png",
+          iconRetinaUrl:
+            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow-2x.png",
+          shadowUrl:
+            "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41],
+        });
+
+        setDefaultIcon(defaultIcon);
+        setOradeaIcon(oradeaIcon);
       });
     }
   }, []);
@@ -265,7 +260,7 @@ export const Maps = () => {
     [teamSize, additionalExpenses, isRemoteTeam]
   );
 
-  if (!isClient || !customIcon) {
+  if (!isClient || !defaultIcon || !oradeaIcon) {
     return (
       <div className="h-screen flex items-center justify-center bg-white">
         <LoaderIcon className="animate-spin h-12 w-12 text-black" />
@@ -295,7 +290,19 @@ export const Maps = () => {
             attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>'
           />
           {initialCities.map((city) => (
-            <Marker key={city.id} position={city.position} icon={customIcon}>
+            <Marker
+              key={city.id}
+              position={city.position}
+              icon={city.id === "oradea" ? oradeaIcon : defaultIcon}
+              eventHandlers={{
+                mouseover: (e) => {
+                  e.target.openPopup();
+                },
+                mouseout: (e) => {
+                  e.target.closePopup();
+                },
+              }}
+            >
               <Popup>
                 <CityPopupContent
                   city={city}

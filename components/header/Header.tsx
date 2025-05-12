@@ -52,7 +52,7 @@ export const Header = () => {
           className="md:hidden cursor-pointer inline-flex items-center justify-center p-2 rounded-md text-gray-700"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
-          <Image unoptimized src={gif} alt="Bright Labs" width={24} height={24} />
+          <Image unoptimized src={gif} alt="Bright Labs" width={35} height={35} />
         </button>
       </div>
 
